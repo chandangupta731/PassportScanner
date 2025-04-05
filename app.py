@@ -69,7 +69,7 @@ def upload():
     cv2.imwrite(temp_crop, mrz_area)
 
     # Use EasyOCR to read the MRZ text
-    reader = easyocr.Reader(['en'], gpu=False)
+    reader = easyocr.Reader(['en'], gpu=False, model_storage_directory='uploads/easyocr_models')
     mrz_results = reader.readtext(temp_crop, detail=0)
     mrz_lines = [line.replace(" ", "").replace('\n', '') for line in mrz_results if line.count('<') > 5 and len(line) >= 30]
 
