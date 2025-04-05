@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Passport OCR</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 500px;
+      margin: 100px auto;
+      background: #fff;
+      padding: 40px 30px;
+      border-radius: 10px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    h2 {
+      margin-bottom: 30px;
+      font-size: 28px;
+      color: #333;
+    }
+    #drop-area {
+      border: 2px dashed #007bff;
+      padding: 40px;
+      margin-bottom: 30px;
+      border-radius: 10px;
+      transition: background-color 0.3s, border-color 0.3s;
+      cursor: pointer;
+    }
+    #drop-area.highlight {
+      background-color: #e6f7ff;
+      border-color: #00aaff;
+    }
+    #drop-area p {
+      color: #007bff;
+      font-size: 18px;
+      margin: 0;
+    }
+    p.bold {
+      margin: 20px 0;
+      font-weight: bold;
+      font-size: 18px;
+      color: #555;
+    }
+    #fileElem {
+      display: none;
+    }
+    .file-label {
+      display: inline-block;
+      padding: 12px 30px;
+      font-size: 16px;
+      background-color: #007bff;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .file-label:hover {
+      background-color: #0056b3;
+    }
+    button {
+      padding: 12px 30px;
+      font-size: 16px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+    #result {
+      margin-top: 30px;
+      font-size: 18px;
+      color: #333;
+    }
+    .result-text {
+      font-size: 16px;
+      margin-top: 10px;
+    }
+    .loading-text {
+      color: #007bff;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .file-name {
+      font-size: 16px;
+      color: #555;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>🛂 Upload Passport Image</h2>
+
+    <!-- Drag & Drop area at top -->
+    <div id="drop-area">
+      <p>Drag & Drop image here</p>
+    </div>
+
+    <p class="bold">OR</p>
+
+    <!-- File input and Upload button -->
+    <label for="fileElem" class="file-label">Choose File</label>
+    <input type="file" id="fileElem" accept="image/*">
+
+    <br><br>
+    <button onclick="uploadImage()">Upload & Parse</button>
+
+    <!-- Display file name after upload -->
+    <div id="file-name" class="file-name"></div>
+
+    <div id="result"></div>
+  </div>
+
+  <script>
+    const dropArea = document.getElementById("drop-area");
+    const fileInput = document.getElementById("fileElem");
+    const fileNameDisplay = document.getElementById("file-name");
+
+    dropArea.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      dropArea.classList.add("highlight");
+    });
+
+    dropArea.addEventListener("dragleave", () => {
+      dropArea.classList.remove("highlight");
+    });
+
+    dropArea.addEventListener("drop", (e) => {
+      e.preventDefault();
+      dropArea.classList.remove("highlight");
+      fileInput.files = e.dataTransfer.files;
+      displayFileName();
+      uploadImage();
+    });
+
+    fileInput.addEventListener("change", () => {
+      displayFileName();
+    });
+
+    function displayFileName() {
+      const file = fileInput.files[0];
+      if (file) {
+        fileNameDisplay.textContent = `Selected File: ${file.name}`;
+      } else {
+        fileNameDisplay.textContent = "";
+      }
+    }
+
+    function uploadImage() {
+      const file = fileInput.files[0];
+      if (!file) return;
+
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const result = document.getElementById("result");
+      result.innerHTML = "<p class='loading-text'>⏳ Processing image... please wait.</p>";
+
+      fetch("/upload", {
+        method: "POST",
+        body: formData
+      })
+      .then(res => res.json())
+      .then(data => {
+        result.innerHTML = "<h3 style='color: green;'>✅ Extracted Fields:</h3>";
+        Object.entries(data).forEach(([key, val]) => {
+          result.innerHTML += `<p class="result-text"><strong>${key}:</strong> ${val}</p>`;
+        });
+      })
+      .catch(err => {
+        result.innerHTML = "<p style='color: red;'>❌ Error parsing image.</p>";
+      });
+    }
+  </script>
+</body>
+</html>
