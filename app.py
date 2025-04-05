@@ -86,4 +86,4 @@ def upload():
 if __name__ == '__main__':
     # Dynamically assign the port for deployment (e.g., Render or Heroku)
     port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port, debug=True)
+    app.run(host="0.0.0.0", port=port, debug=True)  # Keep debug=True if for development, else False for production
