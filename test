@@ -1,0 +1,29 @@
+from passporteye import read_mrz
+import pprint  # Optional for pretty printing
+
+# Load and process the MRZ
+mrz = read_mrz("C:\\Users\\gchit_7t0yidw\\OneDrive\\Desktop\\pass.jpg")
+
+if mrz:
+    data = mrz.to_dict()
+    pprint.pprint({
+        "Document Type": data.get("type"),
+        "Country": data.get("country"),
+        "Surname": data.get("surname"),
+        "Given Names": data.get("names"),
+        "Passport Number": data.get("number"),
+        "Nationality": data.get("nationality"),
+        "Date of Birth": data.get("date_of_birth"),
+        "Sex": data.get("sex"),
+        "Expiration Date": data.get("expiration_date"),
+        "Personal Number": data.get("personal_number"),
+        "MRZ Text": data.get("mrz_text"),
+        "Valid Check": {
+            "Number": data.get("valid_number"),
+            "Date of Birth": data.get("valid_date_of_birth"),
+            "Expiration Date": data.get("valid_expiration_date"),
+            "Composite": data.get("valid_composite")
+        }
+    })
+else:
+    print("MRZ not found!")
