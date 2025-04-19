@@ -5,7 +5,7 @@ Werkzeug==2.3.4
 # OCR libraries
 easyocr==1.7.1
 paddleocr==2.6.1.3
-paddlepaddle==2.5.0  # Use paddlepaddle-gpu==2.x.x if using GPU
+paddlepaddle==2.6.2  # updated to available CPU-compatible version
 
 # Image processing
 opencv-python==4.8.0.76
@@ -20,5 +20,5 @@ matplotlib==3.7.1
 PyYAML==6.0
 requests==2.31.0
 
-# If you deploy with Gunicorn (recommended on Render/Heroku/etc.)
+# Deployment
 gunicorn==21.2.0
