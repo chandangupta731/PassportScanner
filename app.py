@@ -14,7 +14,7 @@ UPLOAD_FOLDER = os.path.join(os.getcwd(), 'uploads')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 # IMPORTANT: Use environment variables for API keys in production!
-API_KEY = "AIzaSyA6-YdUVWyqV9uqEFApTS8q0lysHL9qV1s" # Replace or set environment variable
+API_KEY = "API_KEY" # Replace or set environment variable
 
 GEMINI_MODEL_NAME = 'gemini-1.5-pro-latest'
 
